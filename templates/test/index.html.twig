@@ -1,0 +1,73 @@
+<script>
+    document.addEventListener('DOMContentLoaded', function(event) {
+        {% if operation %}
+        selectDropDownValue('{{ operation }}');
+        {% endif %}
+        showHideDivs();
+    });
+
+    function selectDropDownValue(valueToSelect) {
+        document.getElementById('operation').value = valueToSelect;
+    }
+
+    function showHideDivs() {
+        if (document.getElementById('operation').value == 'regex') {
+            document.getElementById('aritmethic').style.display = 'none';
+            document.getElementById('regex').style.display = 'block';
+        } else {
+            document.getElementById('aritmethic').style.display = 'block';
+            document.getElementById('regex').style.display = 'none';
+            document.getElementById('valueBContent').style.display = (document.getElementById('operation').value == 'fac' ? 'none' : 'block');
+        }
+    }
+</script>
+<h1>Test for MathAPI</h1>
+<form id="mathForm" method="post">
+  <p>Please select your preferred arithmetic operation:</p>
+  <div>
+    <select name="operation" id="operation" onchange="showHideDivs(this)">
+      <option value="add">Addition</option>
+      <option value="sub">Subtraction</option>
+      <option value="mul">Multiplication</option>
+      <option value="sub">Division</option>
+      <option value="fac">Factorial</option>     
+      <option value="regex">Operation with REGEX</option>
+    </select>
+  </div>
+  <div id="aritmethic">
+    <div>
+        <span>Value A</span>
+        <input type="number" id="valueA" name="valueA" value="{{ valueA }}">
+    </div>
+    <div id="valueBContent">
+        <span>Value B</span>
+        <input type="number" id="valueB" name="valueB" value="{{ valueB }}">
+    </div>
+  </div>
+  <div id="regex">
+    <div>
+        <span>Please Insert a Aritmethic Expression (I.E. 123 + 456)</span>
+        <input type="text" id="expression" name="expression" value="{{ expression }}">
+    </div>
+  </div>
+  <div>
+    <button type="submit">Submit</button>
+  </div>
+</form>
+
+{% if result %}
+    {% if error %}
+  <div class"errorMsg">
+    <div>
+        <span>Following error displayed:</span>
+        <span class="error">{{ result | nl2br }}</span>
+    </div>
+  </div>
+    {% else %}  
+  <div class"successMsg">
+    <div>
+        <span>{{ result }}</span>
+    </div>
+  </div>
+    {% endif %}
+{% endif %}
