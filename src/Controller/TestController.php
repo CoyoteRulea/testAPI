@@ -80,15 +80,24 @@ class TestController extends AbstractController
                 }
 
                 $client = HttpClient::create();
-                $response = $client->request('GET', "{$apiUri}{$apiRequest}");
-                $statusCode = $response->getStatusCode();
+                try {
+                    $response = $client->request('GET', "{$apiUri}{$apiRequest}");
 
-                if ($statusCode != 200) {
+                } catch (Exception $e) {
                     $error = true;
-                    $result = "Server Status Code Was {$statusCode}";
+                    $result = $e->getMessage();
                 }
 
-                $result = $response->getContent();
+                if (!$error) {
+                    $statusCode = $response->getStatusCode();
+
+                    if ($statusCode != 200) {
+                        $error = true;
+                        $result = "Server Status Code Was {$statusCode}";
+                    }
+
+                    $result = $response->getContent();
+                }
             }
         }
 
